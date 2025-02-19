@@ -1,4 +1,4 @@
-module github.com/ContainX/docker-volume-netshare
+module github.com/chaos95/docker-volume-netshare
 
 go 1.23.5
 
