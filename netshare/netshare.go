@@ -9,8 +9,9 @@ import (
 	"syscall"
 
 	"github.com/ContainX/docker-volume-netshare/netshare/drivers"
-	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
+	types_volume "github.com/docker/docker/api/types/volume"
 	"github.com/docker/docker/client"
 	"github.com/docker/go-plugins-helpers/volume"
 	log "github.com/sirupsen/logrus"
@@ -292,7 +293,9 @@ func syncDockerState(driverName string) *drivers.MountManager {
 		log.Error(err)
 	}
 
-	volumes, err := cli.VolumeList(context.Background(), filters.Args{})
+	volumes, err := cli.VolumeList(context.Background(), types_volume.ListOptions{
+		Filters: filters.Args{},
+	})
 	if err != nil {
 		log.Fatal(err, ". Use -a flag to setup the DOCKER_API_VERSION. Run 'docker-volume-netshare --help' for usage.")
 	}
@@ -321,7 +324,7 @@ func activeConnections(volumeName string) int {
 		log.Error(err)
 	}
 	var counter = 0
-	ContainerListResponse, err := cli.ContainerList(context.Background(), types.ContainerListOptions{}) //Only check the running containers using volume
+	ContainerListResponse, err := cli.ContainerList(context.Background(), container.ListOptions{}) //Only check the running containers using volume
 	if err != nil {
 		log.Fatal(err, ". Use -a flag to setup the DOCKER_API_VERSION. Run 'docker-volume-netshare --help' for usage.")
 	}
